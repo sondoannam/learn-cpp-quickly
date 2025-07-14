@@ -65,7 +65,7 @@ vector<vector<int>> subsets(vector<int> &nums)
 // 1. Use a loop with each index of the array (n times, n is the length of the array)
 // 2. For each index, mark it as used and add it to the current permutation
 // 3. Recursively call the function to fill the next index
-void permuteBacktrack(vector<int> &nums, int start, vector<bool> &used, vector<int> &current, vector<vector<int>> &result)
+void permuteBacktrack(vector<int> &nums, vector<bool> &used, vector<int> &current, vector<vector<int>> &result)
 {
     if (current.size() == nums.size())
     {
@@ -73,13 +73,13 @@ void permuteBacktrack(vector<int> &nums, int start, vector<bool> &used, vector<i
         return;
     }
 
-    for (int i = start; i < nums.size(); i++)
+    for (int i = 0; i < nums.size(); i++)
     {
         if (used[i])
             continue;   // Skip if already used
         used[i] = true; // Mark as used
         current.push_back(nums[i]);
-        permuteBacktrack(nums, 0, used, current, result);
+        permuteBacktrack(nums, used, current, result);
         current.pop_back(); // Backtrack
         used[i] = false; // Unmark as used
     }
@@ -90,7 +90,7 @@ vector<vector<int>> permute(vector<int> &nums)
     vector<vector<int>> result;
     vector<bool> used(nums.size(), false);
     vector<int> current;
-    permuteBacktrack(nums, 0, used, current, result);
+    permuteBacktrack(nums, used, current, result);
 
     return result;
 }
