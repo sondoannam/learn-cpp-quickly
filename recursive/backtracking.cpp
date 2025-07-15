@@ -95,6 +95,44 @@ vector<vector<int>> permute(vector<int> &nums)
     return result;
 }
 
+
+// 77. Combinations
+// Example: Given n = 4, k = 2, return all combinations of 2 numbers from 1 to 4:
+// [1,2], [1,3], [1,4], [2,3], [2,4], [3,4]
+// Idea:
+// 1. Use a loop with each index of the array (n times, n is the length of the array)
+// 2. For each index, mark it as used and add it to the current combination
+// 3. Recursively call the function to fill the next index
+// 4. Backtrack by unmarking the index and removing it from the current combination
+void combineBacktrack(int n, int k, int start, vector<bool> &used, vector<int> &current, vector<vector<int>> &result)
+{
+    if (current.size() == k)
+    {
+        result.push_back(current);
+        return;
+    }
+
+    for (int i = start; i <= n; i++)
+    {
+        if (used[i])
+            continue; // Skip if already used
+        current.push_back(i);
+        used[i] = true; // Mark as used
+        combineBacktrack(n, k, i + 1, used, current, result);
+        current.pop_back(); // Backtrack
+        used[i] = false; // Unmark as used
+    }
+}
+
+vector<vector<int>> combine(int n, int k)
+{
+    vector<vector<int>> result;
+    vector<int> current;
+    vector<bool> used(n + 1, false); // Not used in this case, but can be useful for other problems
+    combineBacktrack(n, k, 1, used, current, result);
+    return result;
+}
+
 int main()
 {
     // 78. Subsets
@@ -120,6 +158,20 @@ int main()
     {
         cout << "[ ";
         for (int num : perm)
+        {
+            cout << num << " ";
+        }
+        cout << "]\n";
+    }
+
+    // 77. Combinations
+    int n = 4, k = 2;
+    vector<vector<int>> resultComb = combine(n, k);
+    cout << "Combinations of 2 numbers from 1 to 4:\n";
+    for (const auto &comb : resultComb)
+    {
+        cout << "[ ";
+        for (int num : comb)
         {
             cout << num << " ";
         }
