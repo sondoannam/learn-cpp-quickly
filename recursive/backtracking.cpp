@@ -101,10 +101,9 @@ vector<vector<int>> permute(vector<int> &nums)
 // [1,2], [1,3], [1,4], [2,3], [2,4], [3,4]
 // Idea:
 // 1. Use a loop with each index of the array (n times, n is the length of the array)
-// 2. For each index, mark it as used and add it to the current combination
+// 2. For each index, add it to the current combination
 // 3. Recursively call the function to fill the next index
-// 4. Backtrack by unmarking the index and removing it from the current combination
-void combineBacktrack(int n, int k, int start, vector<bool> &used, vector<int> &current, vector<vector<int>> &result)
+void combineBacktrack(int n, int k, int start, vector<int> &current, vector<vector<int>> &result)
 {
     if (current.size() == k)
     {
@@ -114,13 +113,9 @@ void combineBacktrack(int n, int k, int start, vector<bool> &used, vector<int> &
 
     for (int i = start; i <= n; i++)
     {
-        if (used[i])
-            continue; // Skip if already used
         current.push_back(i);
-        used[i] = true; // Mark as used
-        combineBacktrack(n, k, i + 1, used, current, result);
+        combineBacktrack(n, k, i + 1, current, result);
         current.pop_back(); // Backtrack
-        used[i] = false; // Unmark as used
     }
 }
 
@@ -128,10 +123,46 @@ vector<vector<int>> combine(int n, int k)
 {
     vector<vector<int>> result;
     vector<int> current;
-    vector<bool> used(n + 1, false); // Not used in this case, but can be useful for other problems
-    combineBacktrack(n, k, 1, used, current, result);
+    combineBacktrack(n, k, 1, current, result);
     return result;
 }
+
+
+// 39. Combination Sum
+// Example: Given candidates = [2,3,6,7] and target = 7, return all unique combinations that sum to 7:
+// [2,2,3], [7]
+// Idea:
+// 1. Use a loop with each index of the array (n times, n is the length of the array)
+// 2. For each index, add it to the current combination
+// 3. Recursively call the function to fill the next index
+void combinationSumBacktrack(vector<int> &candidates, int start, vector<int> &current, int target, vector<vector<int>> &result)
+{
+    if (target < 0) {
+        return; // If target is negative, no valid combination
+    }
+
+    if (target == 0) {
+        result.push_back(current); // Found a valid combination
+        return;
+    }
+
+    for(int i = start; i < candidates.size(); i++)
+    {
+        current.push_back(candidates[i]); // Choose the candidate
+        combinationSumBacktrack(candidates, i, current, target - candidates[i], result); // Recur with reduced target
+        current.pop_back(); // Backtrack
+    }
+}
+
+vector<vector<int>> combinationSum(vector<int> &candidates, int target)
+{
+    vector<vector<int>> result;
+    vector<int> current;
+    combinationSumBacktrack(candidates, 0, current, target, result);
+    return result;
+}
+
+
 
 int main()
 {
@@ -172,6 +203,21 @@ int main()
     {
         cout << "[ ";
         for (int num : comb)
+        {
+            cout << num << " ";
+        }
+        cout << "]\n";
+    }
+
+    // 39. Combination Sum
+    vector<int> candidates = {2, 3, 6, 7};
+    int target = 7;
+    vector<vector<int>> resultCombSum = combinationSum(candidates, target);
+    cout << "Combination Sum for target 7 with candidates [2, 3, 6, 7]:\n";
+    for (const auto &combSum : resultCombSum)
+    {
+        cout << "[ ";
+        for (int num : combSum)
         {
             cout << num << " ";
         }
